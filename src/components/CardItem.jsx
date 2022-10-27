@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import ReactMarkdown from 'https://esm.sh/react-markdown@7';
+import ReactMarkdown from 'react-markdown';
 
 import { useSelector } from 'react-redux';
 import { selectTheme } from '../redux/slices/themeSlice';
