@@ -17,6 +17,7 @@ import EditItem from './pages/EditItem/EditItem.jsx';
 import CurrentItem from './pages/CurrentItem/CurrentItem.jsx';
 import Collections from './pages/Collections/Collections.jsx';
 import { selectTheme } from './redux/slices/themeSlice.js';
+import Users from './pages/Users/Users.jsx';
 
 function App() {
 	const themeApp = useSelector(selectTheme);
@@ -46,6 +47,7 @@ function App() {
 				<Route path='/my-collections/:id' element={<Collection />} />
 				<Route path='/items/:id' element={<CurrentItem />} />
 				<Route path='/collections' element={<Collections />} />
+				<Route path='/users' element={<Users />} />
 			</Routes>
 			<ToastContainer position='top-right' />
 		</div>

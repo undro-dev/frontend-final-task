@@ -27,7 +27,11 @@ const Collections = () => {
 			<Header />
 			<div className='container'>
 				<div className='mt-2'>
-					<h3>Collections</h3>
+					<h3>
+						{statusCollections === 'loaded' && dataCollections.length === 0
+							? 'No collections'
+							: 'Collections'}
+					</h3>
 					{statusCollections === 'loaded' ? (
 						<div className='d-flex flex-column'>
 							{dataCollections.map(col => (

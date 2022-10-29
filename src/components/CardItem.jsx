@@ -23,9 +23,15 @@ const CardItem = ({
 
 	let currentUserId;
 
-	status === 'loaded'
-		? (currentUserId = data._id)
-		: (currentUserId = undefined);
+	if (!!data && status === 'loaded') {
+		if (data.isAdmin) {
+			currentUserId = true;
+		} else if (data._id === user) {
+			currentUserId = true;
+		} else {
+			currentUserId = false;
+		}
+	}
 
 	if (!imageUrl) {
 		imageUrl =
@@ -53,7 +59,7 @@ const CardItem = ({
 					</span>
 				</div>
 				<div>
-					{currentUserId === user ? (
+					{currentUserId ? (
 						<div>
 							<Link to={`/my-collections/${_id}`}>
 								<Button

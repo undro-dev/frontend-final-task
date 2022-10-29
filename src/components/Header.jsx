@@ -9,11 +9,14 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import ColorSwitches from './Switcher';
 
-import { logout, selectIsAuth } from '../redux/slices/authSlice';
+import { logout, selectIsAuth, selectUser } from '../redux/slices/authSlice';
 import { selectTheme } from '../redux/slices/themeSlice';
 
 const Header = () => {
 	const isAuth = useSelector(selectIsAuth);
+	const user = useSelector(selectUser);
+	const isAdmin = user !== null ? user.isAdmin : false;
+
 	const theme = useSelector(selectTheme);
 
 	const dispatch = useDispatch();
@@ -45,6 +48,11 @@ const Header = () => {
 								<Nav.Link className='link' as={Link} to={'/collections'}>
 									Collections
 								</Nav.Link>
+								{isAdmin ? (
+									<Nav.Link className='link' as={Link} to={'/users'}>
+										Users
+									</Nav.Link>
+								) : null}
 							</>
 						) : (
 							<>

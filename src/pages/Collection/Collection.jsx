@@ -9,7 +9,8 @@ import Table from 'react-bootstrap/Table';
 
 import { fetchItemsById, fetchRemoveItem } from '../../redux/slices/itemsSlice';
 import { selectTheme } from '../../redux/slices/themeSlice';
-import { fetchCollectionsById } from '../../redux/slices/collectionsSlice';
+
+import { fetchOneCollection } from '../../redux/slices/currentCollectionSlice';
 
 const Collection = () => {
 	const dispatch = useDispatch();
@@ -20,35 +21,20 @@ const Collection = () => {
 	const { data: authData, status: authStatus } = useSelector(
 		state => state.auth
 	);
-	const { data: collectionsUser, status: statusCollectionsUser } = useSelector(
-		state => state.collections
-	);
-
-	let currentCollection;
-
-	if (statusCollectionsUser === 'loaded') {
-		currentCollection = collectionsUser.find(col => col._id === id);
-	}
-
-	useEffect(() => {
-		dispatch(fetchCollectionsById());
-		dispatch(fetchItemsById(id));
-	}, []);
+	const { data: currentCollection, status: statusCurrentCollection } =
+		useSelector(state => state.currentCollection);
 
 	let isOwnerCollection = false;
 
-	if (
-		status === 'loaded' &&
-		authStatus === 'loaded' &&
-		statusCollectionsUser === 'loaded'
-	) {
-		const currentCollection = collectionsUser.find(col => col._id === id);
-		if (currentCollection) {
-			currentCollection.user !== authData._id
-				? (isOwnerCollection = false)
-				: (isOwnerCollection = true);
-		}
+	if (statusCurrentCollection === 'loaded' && authStatus === 'loaded') {
+		if (currentCollection.user === authData._id) isOwnerCollection = true;
+		if (authData.isAdmin) isOwnerCollection = true;
 	}
+
+	useEffect(() => {
+		dispatch(fetchItemsById(id));
+		dispatch(fetchOneCollection(id));
+	}, []);
 
 	const removeItem = id => dispatch(fetchRemoveItem(id));
 
@@ -67,7 +53,7 @@ const Collection = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{status === 'loaded' && authStatus === 'loaded'
+						{status === 'loaded' && statusCurrentCollection === 'loaded'
 							? data.map((item, index) => (
 									<Tr
 										key={item._id}
@@ -80,7 +66,7 @@ const Collection = () => {
 							: null}
 					</tbody>
 				</Table>
-				{isOwnerCollection ? (
+				{isOwnerCollection && statusCurrentCollection === 'loaded' ? (
 					<Accord currentCollection={currentCollection} id={id} />
 				) : null}
 			</div>

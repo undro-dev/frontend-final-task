@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../components/Header';
 import TableItems from '../../components/Home/TableItems';
 import CardItem from '../../components/CardItem';
-import { Footer } from '../../components/Footer';
 
 import {
 	fetchAllCollections,
@@ -19,6 +18,14 @@ const Home = () => {
 	const { data: dataCollections, status: statusCollections } = useSelector(
 		state => state.collections
 	);
+
+	let topLongestCollections;
+
+	if (statusCollections === 'loaded') {
+		topLongestCollections = [...dataCollections]
+			.sort((a, b) => b.countItems.length - a.countItems.length)
+			.splice(0, 5);
+	}
 
 	const removeCollection = id => {
 		dispatch(fetchRemoveCollection(id));
@@ -41,7 +48,7 @@ const Home = () => {
 					<h3>Collections</h3>
 					{statusCollections === 'loaded' ? (
 						<div className='d-flex flex-column'>
-							{dataCollections.map(col => (
+							{topLongestCollections.map(col => (
 								<CardItem
 									key={col._id}
 									{...col}
@@ -52,7 +59,6 @@ const Home = () => {
 					) : null}
 				</div>
 			</div>
-			<Footer />
 		</>
 	);
 };
